@@ -1,0 +1,15 @@
+/ {
+	chosen {
+	};
+};
+/*
+ *  Setting UART1 to MCU 4-5 for IPC
+ */
+
+/* This uses MCU 4 & 5 */
+&uart1 {
+	current-speed = <115200>;
+	status = "okay";
+	tx-pin = <25>;
+	rx-pin = <32>;
+};
