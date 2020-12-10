@@ -51,7 +51,7 @@ goto startcmd
 
 rem call the NCS setup cmd file
 :callcmdfilefound
-call %ARDESCO_ROOT%\%ncsver%\toolchain\cmd\env.cmd
+call %envcmd%
 echo Configuration complete.
 
 :startcmd
