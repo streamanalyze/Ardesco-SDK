@@ -29,7 +29,11 @@ static led_state led_seq[] =
  
 };
 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 struct device *gpio_out_dev = 0;
+#else
+const struct device *gpio_out_dev = 0;
+#endif
 
 /*
  * Function: blink_led

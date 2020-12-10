@@ -31,11 +31,15 @@
 
 
 // Indicates USB is connected.
-extern u8_t USB_active;
+extern uint8_t USB_active;
 extern struct k_sem power_event_sem;
 
 static struct serial_dev {
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 	struct device *dev;
+#else
+	const struct device *dev;
+#endif
 	void *peer;
 	struct k_fifo *fifo;
 	struct k_sem sem;
@@ -101,7 +105,11 @@ static int oom_free(struct serial_dev *sd)
 static void uart_usb_passthrough_isr(void *user_data)
 {
 	struct serial_dev *sd = user_data;
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 	struct device *dev = sd->dev;
+#else
+	const struct device *dev = sd->dev;
+#endif	
 	struct serial_dev *peer_sd = (struct serial_dev *)sd->peer;
 
 	uart_irq_update(dev);
@@ -150,7 +158,7 @@ static void uart_usb_passthrough_isr(void *user_data)
 	if (uart_irq_tx_ready(dev)) 
 	{
 		struct uart_data *buf = k_fifo_get(sd->fifo, K_NO_WAIT);
-		u16_t written = 0;
+		uint16_t written = 0;
 
 		/* Nothing in the FIFO, nothing to send */
 		if (!buf) 
@@ -218,7 +226,11 @@ static void usb_uart_thread(void *p1, void *p2, void *p3)
 	int ret;
 	struct serial_dev *usb_0_sd = &devs[0];
 	struct serial_dev *uart_0_sd = &devs[1];
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 	struct device *usb_passthru_dev, *uart_passthru_dev;
+#else
+	const struct device *usb_passthru_dev, *uart_passthru_dev;
+#endif
 
 	// Init the 52840 common serial library.
 	serial_lib_init();

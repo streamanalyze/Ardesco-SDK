@@ -17,7 +17,7 @@ endif()
 
 # These version numbers must match the release version
 set (ARDESCO_SDK_VERSION_MAJOR "1")
-set (ARDESCO_SDK_VERSION_MINOR "5")
+set (ARDESCO_SDK_VERSION_MINOR "6")
 set (ARDESCO_SDK_VERSION_PATCH "0")
 
 #
@@ -131,9 +131,12 @@ if (NOT DEFINED ARDEXT_DIR)
                 string (SUBSTRING ${ARDEXT_DIR} 0 6 ARDEXT_DIR)
                 if (NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/${ARDEXT_DIR})
                         # Neither exist, just use ard1.2 directory
-                        set (ARDEXT_DIR  ${CMAKE_CURRENT_LIST_DIR}/ard1.2)
+                        set (ARDEXT_DIR  ard1.2)
+                        message (STATUS "++++   ARDEXT_DIR directory assumed to be ${ARDEXT_DIR}")       
                         endif()
         endif()
+else()
+message (STATUS "++++  ARDEXT_DIR directory overridden to ${ARDEXT_DIR}")       
 endif()
 
 # -----------------------------------------------------------------------
@@ -219,7 +222,13 @@ set(ARDESCO_DRIVER_DIR ${ARDESCO_ROOT}/drivers)
 # -----------------------------------------------------------------------
 
 # Include custom steps that differ between NCS versions.
+if (EXISTS ${ARDESCO_ROOT}/${ARDEXT_DIR}/ardescoext.cmake)
 include(${ARDESCO_ROOT}/${ARDEXT_DIR}/ardescoext.cmake)
+else()
+message (STATUS "---------------------")
+message(FATAL_ERROR "Ardesco Compat cmake file >${ARDESCO_ROOT}/${ARDEXT_DIR}/ardescoext.cmake< not found.")
+message (STATUS "-----------------------")
+endif()
 
 # -----------------------------------------------------------------------
 # Add Adresco include dir in the default include directories

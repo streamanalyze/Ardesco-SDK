@@ -1,12 +1,6 @@
 /*
  * Copyright (c) Ericsson AB 2020, all rights reserved
  */
-/**@file
- *
- * @defgroup ard_time Ardesco time api
- * @brief  Ardesco time api.
- * @{
- */
 
 #ifndef PERSIST_DATA_H__
 #define PERSIST_DATA_H__

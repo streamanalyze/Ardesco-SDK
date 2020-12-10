@@ -17,15 +17,16 @@ extern "C" {
 // Declare macros to hide the problem.
 //
 #define BOARD_NS_GPIO_0_DEV_NAME "GPIO_0"
+// Only the 52 has a second GPIO controller.
+#ifdef CONFIG_SOC_NRF52840
 #define BOARD_NS_GPIO_1_DEV_NAME "GPIO_1"
-
+#endif
 
 //Breaking changes from 1.2 to 1.3
-#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR == 2)
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 3)
 #define ARD_GPIO_OUT_ACTLOW  GPIO_DIR_OUT
 #define WRT_GPIO(a,b,c)      gpio_pin_write(a,b,c);
-#endif
-#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR == 3)
+#else
 #define ARD_GPIO_OUT_ACTLOW  (GPIO_OUTPUT | GPIO_ACTIVE_LOW)
 #define ARD_GPIO_OUT_ACTHI   (GPIO_OUTPUT | GPIO_ACTIVE_HIGH)
 #define WRT_GPIO(a,b,c)      gpio_pin_set(a,b,c!=0)

@@ -2,7 +2,19 @@
  * Copyright (c) Ericsson AB 2020, all rights reserved
  */
 
+#ifndef ARD_SERIAL_52LIB_H__
+#define ARD_SERIAL_52LIB_H__
+
 #include <device.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Check that we're being used in the right place.
+#ifndef CONFIG_SOC_NRF52840
+#error usb_uart should only be included with 52840 applications.
+#endif
 
 /* Heap block space is always one of 2^(2n) for n from 3 to 7.
  * (see reference/kernel/memory/heap.html for more info)
@@ -17,8 +29,8 @@
 
 struct uart_data {
 	void *fifo_reserved;
-	u8_t buffer[UART_BUF_SIZE];
-	u16_t len;
+	uint8_t buffer[UART_BUF_SIZE];
+	uint16_t len;
 };
 
 /*
@@ -44,10 +56,20 @@ void serial_lib_init(void);
 /*
  * Called to register a serial ISR with the library
  */
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 void serial_lib_register_isr (struct device *dev, struct serial_isr_info *isr_info);
+#else
+void serial_lib_register_isr (const struct device *dev, struct serial_isr_info *isr_info);
+#endif
 
 /*
  * Called to initialize the USB. This function can be called 
  * multiple times but will only initialize the USB once.
  */
 int common_init_usb ();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif //ARD_SERIAL_52LIB_H__

@@ -85,7 +85,7 @@ static int power_mgmt_init(void)
 }
 #endif
 
-static int ard0022B_board_init(struct device *dev)
+static int ard_board_init(struct device *dev)
 {
 #ifndef CONFIG_IS_SECURE_BOOTLOADER
 
@@ -100,4 +100,4 @@ static int ard0022B_board_init(struct device *dev)
 	return 0;
 }
 
-SYS_INIT(ard0022B_board_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
+SYS_INIT(ard_board_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);

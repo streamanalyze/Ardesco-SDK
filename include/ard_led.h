@@ -6,21 +6,18 @@
 #define ARD_LED_H__
 
 // Include basic operating system dependencies
-#include <zephyr.h>
-#include <sys/types.h>
-#include <zephyr/types.h>
+#include <ardesco.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR == 2)
+// These defines are derived from the .dts files in the respective board directories
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 3)
 #define LED_R DT_GPIO_LEDS_LED_1_GPIOS_PIN
 #define LED_B DT_GPIO_LEDS_LED_2_GPIOS_PIN
 #define LED_G DT_GPIO_LEDS_LED_3_GPIOS_PIN
-#endif
-
-#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR == 3)
+#else
 #define LED_R DT_N_S_leds_S_led_1_P_gpios_IDX_0_VAL_pin
 #define LED_B DT_N_S_leds_S_led_2_P_gpios_IDX_0_VAL_pin
 #define LED_G DT_N_S_leds_S_led_3_P_gpios_IDX_0_VAL_pin

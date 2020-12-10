@@ -1,0 +1,12 @@
+identifier: nrf52840_ard0011A
+name: nRF52840-ARD0011A
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+  - gnuarmemb
+supported:
+  - adc
+  - usb_device
+  - ble
+  - ieee802154

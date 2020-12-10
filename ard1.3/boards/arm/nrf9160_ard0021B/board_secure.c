@@ -11,7 +11,7 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(board_secure, CONFIG_BOARD_LOG_LEVEL);
 
-#define ADP536X_I2C_DEV_NAME	DT_NORDIC_NRF_TWIM_I2C_2_LABEL
+#define ADP536X_I2C_DEV_NAME	DT_LABEL(DT_NODELABEL(i2c2))
 #define LC_MAX_READ_LENGTH	128
 
 #ifndef CONFIG_IS_SECURE_BOOTLOADER
@@ -84,7 +84,7 @@ static int power_mgmt_init(void)
 }
 #endif
 
-static int ard0021B_board_init(struct device *dev)
+static int ard_board_init(struct device *dev)
 {
 #ifndef CONFIG_IS_SECURE_BOOTLOADER
 
@@ -99,4 +99,4 @@ static int ard0021B_board_init(struct device *dev)
 	return 0;
 }
 
-SYS_INIT(ard0021B_board_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
+SYS_INIT(ard_board_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);

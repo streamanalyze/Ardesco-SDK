@@ -1,7 +1,7 @@
 Release Notes
 
 Usage
-	Clone SDK into a directory on your hard drive.
+	Unzip the ardesco_sdk .zip file into a directory on your hard drive.
 	
 	Download the Nordic Connect for Desktop tool from the Nordic website
 
@@ -19,12 +19,30 @@ Usage
 
 Changelog
 
+Release 1.6
+	Added board directories compatible to Nordic SDK 1.4. Set the target
+	NCS version to v1.4.0, while remaining backward compatible with v1.3.
+
+	Added sensor_lib library to provide simple API to read environment and
+	accelerometer sensors.
+
+	Added support on 52840 for LED and "boot" button in board directories 
+	for Combi and Combi Dev.
+
+	Added using_sensors example to demonstrate using the sensor library.
+
+	Added grove_i2c example to demonstrate using I2C across Grove connector.
+
+	Added grove_console example to demonstrate redirecting the console out the Grove connector
+
+	Removed support for Ardesco Mini for v1.4.0
+
+	Fixed bugs in Combi board directory that prevented successful compile.
+
 Release 1.5
 	Added missing file ard_led.h.
 
 	Added precompiled .hex files for at_client and usb_uart_bridge samples.
-
-	Fixed board directory files for Ardesco Combi
 
 	Added this readme file.
 

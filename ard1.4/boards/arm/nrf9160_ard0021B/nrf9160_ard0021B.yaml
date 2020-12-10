@@ -1,0 +1,11 @@
+identifier: nrf9160_ard0021B
+name: nRF9160-ARD0021B
+type: mcu
+arch: arm
+toolchain:
+  - gnuarmemb
+  - zephyr
+ram: 64
+flash: 256
+supported:
+  - i2c
