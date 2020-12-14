@@ -1,0 +1,26 @@
+# Kconfig - ADP536x
+#
+# Copyright (c) 2019 Nordic Semiconductor
+# Copyright (c) Ericsson AB 2020, all rights reserved
+#
+# SPDX-License-Identifier: LicenseRef-BSD-5-Clause-Nordic
+#
+
+#
+# Modified by Ericsson AB for Ardesco:
+# - Based on nRF driver adp536x
+# - Changed to support Ardesco battery monitoring
+#
+
+menuconfig ADP5360
+	bool "ADP5360"
+	help
+	  Enable ADP5360.
+
+if ADP5360
+
+config ADP536X_BUS_NAME
+	string "I2C bus name"
+	default "I2C_2"
+
+endif # ADP5360

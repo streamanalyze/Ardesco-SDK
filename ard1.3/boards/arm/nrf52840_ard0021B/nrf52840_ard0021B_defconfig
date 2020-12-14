@@ -1,3 +1,6 @@
+#
+# Copyright (c) Ericsson AB 2020, all rights reserved
+#
 CONFIG_SOC_SERIES_NRF52X=y
 CONFIG_SOC_NRF52840_QIAA=y
 CONFIG_BOARD_NRF52840_PCA20035=y
@@ -11,5 +14,5 @@ CONFIG_SERIAL=y
 # Enable console
 CONFIG_CONSOLE=y
 
-# Additional board options
-CONFIG_GPIO_AS_PINRESET=n
+# Used by boot52 button handler
+CONFIG_REBOOT=y

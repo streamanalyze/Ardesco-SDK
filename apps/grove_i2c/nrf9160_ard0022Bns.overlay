@@ -1,0 +1,14 @@
+/* Using Grove connector as i2c  
+ * The Grove Analog / Digital select line is configured
+ * in board_nonsecure.c.  
+ */
+
+
+&i2c1 {
+	compatible = "nordic,nrf-twim";
+	status = "okay";
+	sda-pin = <14>;
+	scl-pin = <13>;
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+	/* clock-frequency = <I2C_BITRATE_FAST>;*/
+};

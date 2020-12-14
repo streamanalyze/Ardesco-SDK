@@ -17,7 +17,7 @@
 #include <serial_52lib.h>
 
 // Indicates USB is connected.
-u8_t USB_active = 1;
+uint8_t USB_active = 1;
 
 #define POWER_THREAD_STACKSIZE		CONFIG_IDLE_STACK_SIZE
 #define POWER_THREAD_PRIORITY		K_LOWEST_APPLICATION_THREAD_PRIO
@@ -30,7 +30,11 @@ u8_t USB_active = 1;
  * when the callback was initialized.
  * 
  */ 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 static void uart_interrupt_handler(void *user_data)
+#else
+static void uart_interrupt_handler(const struct device *dev, void *user_data)
+#endif
 {
 	struct serial_isr_info *isr_info = user_data;
 
@@ -78,7 +82,7 @@ int common_init_usb ()
 		usb_enabled++;
 	return rc;
 }
-static u8_t seral_lib_initialized = 0;
+static uint8_t seral_lib_initialized = 0;
 /*
  * serial_lib_init - Initializes the library.
  *
@@ -104,7 +108,11 @@ void serial_lib_init(void)
  * serial_lib_register_isr - register an isr
  *
  */ 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 void serial_lib_register_isr (struct device *dev, struct serial_isr_info *isr_info)
+#else
+void serial_lib_register_isr (const struct device *dev, struct serial_isr_info *isr_info)
+#endif
 {
 	uart_irq_callback_user_data_set(dev, uart_interrupt_handler, isr_info);
 }

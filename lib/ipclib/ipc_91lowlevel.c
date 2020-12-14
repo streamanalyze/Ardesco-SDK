@@ -36,22 +36,26 @@ LOG_MODULE_REGISTER(ard_uart_pipe, CONFIG_UART_CONSOLE_LOG_LEVEL);
 
 struct uart_data {
 	void *fifo_reserved;
-	u8_t buffer[UART_BUF_SIZE];
-	u16_t len;
+	uint8_t buffer[UART_BUF_SIZE];
+	uint16_t len;
 };
 
 
-typedef u8_t *(*uart_pipe_recv_cb)(u8_t *buf, size_t *off);
+typedef uint8_t *(*uart_pipe_recv_cb)(uint8_t *buf, size_t *off);
 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 static struct device *ipc91_pipe_dev = 0;
+#else
+const struct device *ipc91_pipe_dev = 0;
+#endif
 
-static u8_t *recv_buf;
+static uint8_t *recv_buf;
 static size_t recv_buf_len;
 static uart_pipe_recv_cb app_cb;
 static size_t recv_off;
 
 // Buffer used by serial pipe
-static u8_t pipebuf[64];
+static uint8_t pipebuf[64];
 
 // Callback to the command processor
 static coproc_recv_cb common_code_cb;
@@ -69,7 +73,11 @@ struct uart_data databufs[BUF_CNT];
  * for IPC uart. 
  * This routine copyed from zephyr pipe.c
  */
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 static void ipc91_pipe_isr(struct device *dev)
+#else
+static void ipc91_pipe_isr(const struct device *dev, void *user_data)
+#endif
 {
 	uart_irq_update(dev);
 
@@ -107,7 +115,7 @@ static void ipc91_pipe_isr(struct device *dev)
 /*
  * ipc91_pipe_send - Sends data out the pipe.
  */
-int ipc91_pipe_send(const u8_t *data, int len)
+int ipc91_pipe_send(const uint8_t *data, int len)
 {
 	LOG_HEXDUMP_DBG(data, len, "TX");
 
@@ -129,7 +137,7 @@ int ipc91_pipe_send(const u8_t *data, int len)
  * ipc91_pipe_register - Opens serial driver, registers ISR and 
  * enables interrupts.
  */
-void ipc91_pipe_register(char *uart_name, u8_t *buf, size_t len, uart_pipe_recv_cb cb)
+void ipc91_pipe_register(char *uart_name, uint8_t *buf, size_t len, uart_pipe_recv_cb cb)
 {
 	recv_buf = buf;
 	recv_buf_len = len;
@@ -139,7 +147,7 @@ void ipc91_pipe_register(char *uart_name, u8_t *buf, size_t len, uart_pipe_recv_
 
 	if (ipc91_pipe_dev != NULL) 
 	{
-		u8_t c;
+		uint8_t c;
 
 		uart_irq_rx_disable(ipc91_pipe_dev);
 		uart_irq_tx_disable(ipc91_pipe_dev);
@@ -175,11 +183,11 @@ struct uart_data databufs[BUF_CNT];
  * the pipe write directly into the uart_data
  * structure buffer. Not doing that today.
  */
-static u8_t *pipe_recv_cb(u8_t *buf, size_t *off)
+static uint8_t *pipe_recv_cb(uint8_t *buf, size_t *off)
 {
 	static struct uart_data *pcurbuf = 0;
-	static u8_t remain = 0;
-	static u8_t lastchar = 0;
+	static uint8_t remain = 0;
+	static uint8_t lastchar = 0;
 	char *pnext = buf; //init not needed but calms the compiler.
 
 //#define DBG_DMP
@@ -291,7 +299,7 @@ static void ipc91_monitor_thread(void *p1, void *p2, void *p3)
 			// Notify app that we have an incoming command.
 			if (common_code_cb)
 			{
-				u8_t trm = buf->len;
+				uint8_t trm = buf->len;
 				if (buf->len < UART_BUF_SIZE)
 				{
 					trm = buf->len+1;

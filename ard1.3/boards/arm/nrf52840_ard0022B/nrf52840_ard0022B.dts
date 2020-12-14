@@ -18,6 +18,31 @@
 		zephyr,sram = &sram0;
 		zephyr,uart-mcumgr = &uart0;
 	};
+
+	buttons {
+		compatible = "gpio-keys";
+
+		/* Boot button for 52840 */
+		button0: button_0 {
+			gpios = <&gpio1 13 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Button 1";
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio1 11 0>;
+			label = "52840 blue LED";
+		};
+	};
+
+	/* These aliases are provided for compatibility with samples */
+	aliases {
+		btn0 = &button0;
+		led0 = &led0;
+	};
+
 };
 
 &adc {

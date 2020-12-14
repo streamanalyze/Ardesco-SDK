@@ -48,13 +48,21 @@ static K_FIFO_DEFINE(usb_console_rx_fifo);
 static K_FIFO_DEFINE(uart_ipc_rx_fifo);
 
 static struct ipc_serial_dev {
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 	struct device *dev;
+#else
+	const struct device *dev;
+#endif
 	struct k_fifo *rx_fifo;
 	struct k_fifo *tx_fifo;
 	struct uart_data *rx;
 } ipcdevs[2];
 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 struct device *uart_ipc_dev = 0;
+#else
+const struct device *uart_ipc_dev = 0;
+#endif
 
 // These serial dev structures must be visible outside
 // the init code so that the isr can know which uart
@@ -70,7 +78,7 @@ int usb_isr = 0;
 int usb_rx_isr = 0;
 int usb_tx_isr = 0;
 
-static u8_t buffer[UART_BUF_SIZE];
+static uint8_t buffer[UART_BUF_SIZE];
 
 /*
  * ipc_interrupt_handler - All UARTs on the 52840
@@ -81,7 +89,11 @@ static u8_t buffer[UART_BUF_SIZE];
 static void ipc_interrupt_handler(void *user_data)
 {
 	struct ipc_serial_dev *sd = user_data;
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 	struct device *dev = sd->dev;
+#else
+	const struct device *dev = sd->dev;
+#endif
 
 	uart_irq_update(dev);
 
@@ -125,7 +137,7 @@ static void ipc_interrupt_handler(void *user_data)
 	if (uart_irq_tx_ready(dev)) 
 	{
 		struct uart_data *buf = k_fifo_get(sd->tx_fifo, K_NO_WAIT);
-		u16_t written = 0;
+		uint16_t written = 0;
 
 		/* Nothing in the FIFO, nothing to send */
 		if (!buf) {
@@ -220,7 +232,7 @@ static void ipc52_monitor_thread(void *p1, void *p2, void *p3)
 				// Force a zero termination. If the buff is
 				// totally full, zero out the last byte. Otherwise,
 				// the string terminated 1 char earlier.
-				u8_t trm = buf->len;
+				uint8_t trm = buf->len;
 				if (buf->len == UART_BUF_SIZE)
 				{
 					trm = buf->len;
